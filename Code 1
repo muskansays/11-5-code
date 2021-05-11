@@ -1,0 +1,58 @@
+import datetime
+# function that takes a dictionaryas input
+def solution(D):
+    # create a disctionary and assign value swith zero
+    temp = {'Mon':0, 'Tue':0, 'Wed':0, 'Thu':0, 'Fri':0, 'Sat':0, 'Sun':0}
+    # iterate through the dictionary
+    for date, value in D.items():
+        # split the year, month, day from date
+        year, month, day = (int(i) for i in date.split('-'))
+        # use date() function to get the day object
+        dayName = datetime.date(year, month, day)
+        # get the perticular day name
+        d = str(dayName.strftime("%A"))[0:3]
+        # check if that day is already in dictionary
+        if d in temp:
+            # incerementing the count by value
+            temp[d] += value
+        # check if that day is not in dictionary
+        else:
+            # setting the day count to value
+            temp[d] = value
+    # extract day from dictionary in form of list
+    day = list(temp.keys())
+    # extract value day from dictionary in form of list
+    value = list(temp.values())
+    # iterate through [20:40, 11/05/2021] Vaibhav Singh Vit: the value to handle empty day value
+    # ir willl fill the empty days with mean of previous day and next day value
+    for i in range(1, len(value)-1):
+        if value[i] == 0:
+            m = 0
+            for j in range(i+1, len(value)):
+                # if value of zero at index j
+                if(value[j] != 0):
+                    # get the difference adding which we will get the mean
+                    m = int((value[j] - value[i-1]) / (j-i+1))
+                    break;
+            # iterate and fill the zero values with mean
+            for j in range(i, len(value)-1):
+                if(value[j] == 0):
+                    value[j] = value[j-1] + m
+                else:
+                    break
+    # convert the both list to dictionary
+    D = dict(zip(day, value))
+    # return the dictionary
+    return D
+ 
+ ////
+        
+        
+# test case : 1
+"""D = {'2020-01-01':4, '2020-01-02':4, '2020-01-03':6, '2020-01-04':8, 
+     '2020-01-05':2, '2020-01-06':-6, '2020-01-07':2, '2020-01-08':-2} """
+# test case : 2
+D = {'2020-01-01':6, '2020-01-04':12,
+     '2020-01-05':14, '2020-01-06':2, '2020-01-07':4}
+# call the function and print the dictionary returned by it
+print(solution(D))
